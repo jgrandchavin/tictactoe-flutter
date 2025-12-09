@@ -6,9 +6,11 @@ class StartNewGame {
 
   StartNewGame({required this.gameRepository});
 
-  Future<void> call() async {
+  Future<GameState> call() async {
     final gameState = GameState.empty();
 
-    return gameRepository.saveGame(gameState: gameState);
+    await gameRepository.saveGame(gameState: gameState);
+
+    return gameState;
   }
 }

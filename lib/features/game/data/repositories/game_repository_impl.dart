@@ -16,7 +16,7 @@ class GameRepositoryImpl implements GameRepository {
   @override
   Future<GameState?> getSavedGame() async {
     final gameState = await gameLocalDataSource.getSavedGame();
-    return gameState.toDomain();
+    return gameState?.toDomain();
   }
 
   @override

@@ -1,0 +1,30 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
+import 'package:tictactoe_flutter/features/game/domain/entities/position.dart';
+import 'package:tictactoe_flutter/features/game/game_providers.dart';
+import 'package:tictactoe_flutter/features/game/presentation/controllers/game_view_state.dart';
+
+part 'game_view_controller.g.dart';
+
+@riverpod
+class GameViewController extends _$GameViewController {
+  @override
+  GameViewState build() {
+    return GameViewState(gameState: GameState.empty());
+  }
+
+  Future<void> makeMove({required Position position}) async {
+    final gameState = state.gameState;
+    final newGameState = await ref
+        .read(makeMoveUsecaseProvider)
+        .call(gameState: gameState, position: position);
+
+    state = state.copyWith(gameState: newGameState);
+  }
+
+  Future<void> startNewGame() async {
+    final newGameState = await ref.read(startNewGameUsecaseProvider).call();
+
+    state = state.copyWith(gameState: newGameState);
+  }
+}

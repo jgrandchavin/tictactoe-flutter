@@ -5,13 +5,20 @@ import 'package:tictactoe_flutter/features/game/domain/enums/player.dart';
 
 /// Core validation and win-detection rules for the Tic-Tac-Toe game.
 class GameRules {
-  /// Checks whether a move is allowed at [position] on the given [board].
+  /// Checks if the given [position] is within the valid range of the board.
   ///
-  /// Returns `true` if the target cell is empty, otherwise `false`.
-  static bool isMoveValid({required Board board, required Position position}) {
-    if (!GameRules.isInBounds(position: position)) return false;
-    if (GameRules.isGameFinished(board: board)) return false;
+  /// Returns `true` if the position is within bounds, otherwise `false`.
+  static bool isMoveInBounds({required Position position}) {
+    return position.row >= 0 &&
+        position.row < Board.size &&
+        position.column >= 0 &&
+        position.column < Board.size;
+  }
 
+  /// Checks if the cell at the given [position] is empty.
+  ///
+  /// Returns `true` if the cell is empty, otherwise `false`.
+  static bool isCellEmpty({required Board board, required Position position}) {
     return board.cells[position.row][position.column] == null;
   }
 
@@ -66,24 +73,47 @@ class GameRules {
     return null;
   }
 
-  /// Checks if the given [position] is within the valid range of the board.
+  /// Makes a move on the given [board] at the given [position].
   ///
-  /// Returns `true` if the position is within bounds, otherwise `false`.
-  static bool isInBounds({required Position position}) {
-    return position.row >= 0 &&
-        position.row < Board.size &&
-        position.column >= 0 &&
-        position.column < Board.size;
+  /// Returns the new [Board] with the move made.
+  static Board makeMove({
+    required Board board,
+    required Position position,
+    required Player player,
+  }) {
+    board.cells[position.row][position.column] = player;
+
+    return board;
   }
 
-  /// Returns the [GameStatus] of the game.
-  static GameStatus getGameStatus({required Board board}) {
-    if (isGameWon(board: board) != null) {
+  /// Returns the next player based on the given [player].
+  ///
+  /// Returns [Player.x] if the given [player] is [Player.o], otherwise returns [Player.o].
+  static Player getNextPlayer({required Player player}) =>
+      player == Player.x ? Player.o : Player.x;
+
+  /// Determines the new game status based on the current game state.
+  ///
+  /// Returns the new [GameStatus] based on the following conditions:
+  /// - If the board is empty, returns [GameStatus.notStarted].
+  /// - If a player has won, returns [GameStatus.finished].
+  /// - Otherwise, returns [GameStatus.inProgress].
+  static GameStatus getNewGameStatus({required Board board}) {
+    final isEmpty = board.cells
+        .expand((row) => row)
+        .every((cell) => cell == null);
+
+    if (isEmpty) {
+      return GameStatus.notStarted;
+    } else if (isGameFinished(board: board)) {
       return GameStatus.finished;
+    } else {
+      return GameStatus.inProgress;
     }
-    if (isGameFinished(board: board)) {
-      return GameStatus.finished;
-    }
-    return GameStatus.inProgress;
   }
+
+  /// Determines the new winner based on the current game state.
+  ///
+  /// Returns the new [Player] who has won, or `null` if there is no winner yet.
+  static Player? getWinner({required Board board}) => isGameWon(board: board);
 }
