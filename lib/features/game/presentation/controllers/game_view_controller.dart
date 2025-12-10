@@ -1,6 +1,7 @@
 import 'dart:ui' show Offset;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tictactoe_flutter/core/utils/haptics_utils.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/board.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/position.dart';
@@ -37,10 +38,19 @@ class GameViewController extends _$GameViewController {
         );
         if (line != null) {
           _animateWinCells(line);
+          // Slightly delayed pulse to align with the first win overlay peak.
+          Future<void>.delayed(
+            const Duration(milliseconds: 120),
+            HapticsUtils.win,
+          );
         }
+      } else if (newGameState.status.name == 'finished') {
+        // Draw (finished with no winner)
+        HapticsUtils.draw();
       }
     } catch (e) {
       animateTapError(position);
+      HapticsUtils.invalidMove();
     }
   }
 
@@ -49,6 +59,11 @@ class GameViewController extends _$GameViewController {
 
     state = state.copyWith(gameState: newGameState);
     _resetAllCellAnimations();
+    // Brief haptic to confirm reset, aligned with initial appear.
+    Future<void>.delayed(
+      const Duration(milliseconds: 50),
+      HapticsUtils.startNewGame,
+    );
   }
 
   void animateTapError(Position p) {

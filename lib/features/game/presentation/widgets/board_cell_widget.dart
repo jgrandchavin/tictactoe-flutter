@@ -4,6 +4,7 @@ import 'package:tictactoe_flutter/core/design/app_colors.dart';
 import 'package:tictactoe_flutter/core/design/painters/cross_painter.dart';
 import 'package:tictactoe_flutter/core/design/painters/ring_painter.dart';
 import 'package:tictactoe_flutter/core/design/widgets/app_text.dart';
+import 'package:tictactoe_flutter/core/utils/haptics_utils.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/player.dart';
 import 'package:tictactoe_flutter/features/game/presentation/animation/cell_anim_handle.dart';
 
@@ -92,6 +93,30 @@ class _BoardCellWidgetState extends ConsumerState<BoardCellWidget>
       begin: 1.0,
       end: 1.06,
     ).animate(CurvedAnimation(parent: _winCtrl, curve: Curves.easeInOut));
+
+    // Haptics synced to animation lifecycle
+    // _appearCtrl.addStatusListener((status) {
+    //   if (status == AnimationStatus.forward) {
+    //     // Use custom pattern to match appear timing when needed
+    //     HapticsUtils.cellAppear();
+    //   }
+    // });
+    _tapCtrl.addStatusListener((status) {
+      if (status == AnimationStatus.forward) {
+        HapticsUtils.move();
+      }
+    });
+    _errorCtrl.addStatusListener((status) {
+      if (status == AnimationStatus.forward) {
+        HapticsUtils.invalidMove();
+      }
+    });
+    _nudgeCtrl.addStatusListener((status) {
+      if (status == AnimationStatus.forward) {
+        // Subtle nudge for neighbors
+        HapticsUtils.move();
+      }
+    });
 
     // Register handle for controller to command this cell
     _handleNotifier.value = CellAnimHandle(

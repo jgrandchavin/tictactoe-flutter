@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
 
   flutter_riverpod: ^3.0.3
+  gaimon: ^1.4.2
   json_annotation: ^4.9.0
   logger: ^2.6.2
   riverpod_annotation: ^3.0.3

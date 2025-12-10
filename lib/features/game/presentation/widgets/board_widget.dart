@@ -3,6 +3,7 @@ import 'package:tictactoe_flutter/core/design/app_colors.dart';
 import 'package:tictactoe_flutter/core/design/painters/cross_painter.dart';
 import 'package:tictactoe_flutter/core/design/painters/ring_painter.dart';
 import 'package:tictactoe_flutter/core/design/widgets/app_text.dart';
+import 'package:tictactoe_flutter/core/design/widgets/custom_gesture_detector.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/board.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/position.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/player.dart';
@@ -52,7 +53,7 @@ class BoardWidget extends StatelessWidget {
                     final col = index % Board.size;
                     final player = cells[row][col];
 
-                    return GestureDetector(
+                    return CustomGestureDetector(
                       onTap: () {
                         onCellTap(Position(row: row, column: col));
                       },
@@ -78,6 +79,7 @@ class BoardWidget extends StatelessWidget {
               ),
               child: winner == null
                   ? Row(
+                      key: ValueKey<Player>(currentPlayer),
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -105,12 +107,26 @@ class BoardWidget extends StatelessWidget {
                           ),
                         const SizedBox(width: 4),
                         AppText.custom(
+                          text:
+                              '${currentPlayer == Player.x ? 'Cross' : 'Circle'}'
+                                  .toUpperCase(),
+                          textAlign: TextAlign.center,
+                          color: currentPlayer == Player.x
+                              ? AppColors.blue
+                              : AppColors.pink,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                          fontStyle: FontStyle.normal,
+                        ),
+                        const SizedBox(width: 4),
+                        AppText.custom(
                           text: 'Turn'.toUpperCase(),
                           textAlign: TextAlign.center,
                           color: AppColors.white,
                           overflow: TextOverflow.ellipsis,
                           fontWeight: FontWeight.w700,
-                          fontSize: 16,
+                          fontSize: 18,
                           fontStyle: FontStyle.normal,
                         ),
                       ],
@@ -164,8 +180,6 @@ class BoardWidget extends StatelessWidget {
 }
 
 class _SmallBoardClip extends StatelessWidget {
-  const _SmallBoardClip({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Container(
