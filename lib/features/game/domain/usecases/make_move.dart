@@ -1,12 +1,16 @@
 import 'dart:async';
 
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tictactoe_flutter/core/errors/game_error.dart';
+import 'package:tictactoe_flutter/features/game/data/repositories/game_repository_impl.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/position.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/game_status.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/player.dart';
 import 'package:tictactoe_flutter/features/game/domain/repositories/game_repository.dart';
 import 'package:tictactoe_flutter/features/game/domain/rules/game_rules.dart';
+
+part 'make_move.g.dart';
 
 class MakeMove {
   final GameRepository gameRepository;
@@ -57,4 +61,10 @@ class MakeMove {
 
     return newGameState;
   }
+}
+
+@Riverpod(keepAlive: true)
+MakeMove makeMoveUsecase(Ref ref) {
+  final gameRepository = ref.watch(gameRepositoryProvider);
+  return MakeMove(gameRepository: gameRepository);
 }

@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tictactoe_flutter/core/providers/shared_preferences_provider.dart';
 import 'package:tictactoe_flutter/features/game/data/models/game_state_model.dart';
+
+part 'game_local_datasource.g.dart';
 
 abstract class GameLocalDataSource {
   Future<GameStateModel?> getSavedGame();
@@ -31,4 +35,10 @@ class GameLocalDataSourceImpl implements GameLocalDataSource {
   Future<void> clearGame() async {
     await prefs.remove('game_state');
   }
+}
+
+@Riverpod(keepAlive: true)
+GameLocalDataSource gameLocalDataSource(Ref ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return GameLocalDataSourceImpl(prefs: prefs);
 }

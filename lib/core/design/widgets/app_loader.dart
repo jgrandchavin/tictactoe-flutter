@@ -23,7 +23,7 @@ class AppLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color foreground = color ?? Theme.of(context).colorScheme.primary;
-    final Color bg = backgroundColor ?? foreground.withOpacity(0.2);
+    final Color bg = backgroundColor ?? foreground.withValues(alpha: 0.2);
 
     return Semantics(
       label: 'Loading',
@@ -53,7 +53,7 @@ class AppLoader extends StatelessWidget {
             }();
             return CustomPaint(
               painter: _ArcSpinnerPainter(
-                color: foreground.withOpacity(opacity.clamp(0.0, 1.0)),
+                color: foreground.withValues(alpha: opacity.clamp(0.0, 1.0)),
                 backgroundColor: bg,
                 strokeWidth: strokeWidth,
                 sweep: sweep,

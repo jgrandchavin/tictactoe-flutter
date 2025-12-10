@@ -1,7 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/position.dart';
-import 'package:tictactoe_flutter/features/game/game_providers.dart';
+import 'package:tictactoe_flutter/features/game/domain/usecases/make_move.dart';
+import 'package:tictactoe_flutter/features/game/domain/usecases/start_new_game.dart';
 import 'package:tictactoe_flutter/features/game/presentation/controllers/game_view_state.dart';
 
 part 'game_view_controller.g.dart';
