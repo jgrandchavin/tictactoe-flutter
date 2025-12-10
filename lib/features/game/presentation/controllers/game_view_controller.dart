@@ -10,8 +10,8 @@ part 'game_view_controller.g.dart';
 @riverpod
 class GameViewController extends _$GameViewController {
   @override
-  GameViewState build() {
-    return GameViewState(gameState: GameState.empty());
+  GameViewState build(GameState? savedGame) {
+    return GameViewState(gameState: savedGame ?? GameState.empty());
   }
 
   Future<void> makeMove({required Position position}) async {

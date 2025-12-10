@@ -1,69 +1,187 @@
 import 'package:flutter/material.dart';
+import 'package:tictactoe_flutter/core/design/app_colors.dart';
+import 'package:tictactoe_flutter/core/design/painters/cross_painter.dart';
+import 'package:tictactoe_flutter/core/design/painters/ring_painter.dart';
+import 'package:tictactoe_flutter/core/design/widgets/app_text.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/board.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/position.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/player.dart';
+import 'package:tictactoe_flutter/features/game/presentation/widgets/board_cell_widget.dart';
 
 class BoardWidget extends StatelessWidget {
   final Board board;
+  final Player? winner;
+  final Player currentPlayer;
   final Function(Position position) onCellTap;
 
-  const BoardWidget({super.key, required this.board, required this.onCellTap});
+  const BoardWidget({
+    super.key,
+    required this.board,
+    required this.onCellTap,
+    required this.winner,
+    required this.currentPlayer,
+  });
 
   @override
   Widget build(BuildContext context) {
     final cells = board.cells;
 
-    return AspectRatio(
-      aspectRatio: 1,
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.zero,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: Board.size,
-        ),
-        itemCount: Board.size * Board.size,
-        itemBuilder: (context, index) {
-          final row = index ~/ Board.size;
-          final col = index % Board.size;
-          final player = cells[row][col];
-
-          return GestureDetector(
-            onTap: () => onCellTap(Position(row: row, column: col)),
-            child: Container(
+    return Stack(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
               decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: row == 0 ? Colors.transparent : Colors.black26,
+                color: AppColors.tertiary,
+                borderRadius: BorderRadius.circular(32),
+              ),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: Board.size,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
                   ),
-                  left: BorderSide(
-                    color: col == 0 ? Colors.transparent : Colors.black26,
-                  ),
-                  right: const BorderSide(color: Colors.black26),
-                  bottom: const BorderSide(color: Colors.black26),
+                  itemCount: Board.size * Board.size,
+                  itemBuilder: (context, index) {
+                    final row = index ~/ Board.size;
+                    final col = index % Board.size;
+                    final player = cells[row][col];
+
+                    return GestureDetector(
+                      onTap: () {
+                        onCellTap(Position(row: row, column: col));
+                      },
+                      child: BoardCellWidget(cellIndex: index, player: player),
+                    );
+                  },
                 ),
               ),
-              alignment: Alignment.center,
-              child: Text(
-                _playerToSymbol(player),
-                style: Theme.of(
-                  context,
-                ).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
-              ),
             ),
-          );
-        },
-      ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.tertiary,
+                    blurRadius: 0,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: winner == null
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (currentPlayer == Player.x)
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CustomPaint(
+                              painter: CrossPainter(
+                                color: AppColors.blue,
+                                strokeWidth: 4,
+                              ),
+                            ),
+                          )
+                        else if (currentPlayer == Player.o)
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CustomPaint(
+                              painter: RingPainter(
+                                color: AppColors.pink,
+                                strokeWidth: 4,
+                              ),
+                            ),
+                          ),
+                        const SizedBox(width: 4),
+                        AppText.custom(
+                          text: 'Turn'.toUpperCase(),
+                          textAlign: TextAlign.center,
+                          color: AppColors.white,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          fontStyle: FontStyle.normal,
+                        ),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (winner == Player.x)
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CustomPaint(
+                              painter: CrossPainter(
+                                color: AppColors.blue,
+                                strokeWidth: 4,
+                              ),
+                            ),
+                          )
+                        else if (winner == Player.o)
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CustomPaint(
+                              painter: RingPainter(
+                                color: AppColors.pink,
+                                strokeWidth: 4,
+                              ),
+                            ),
+                          ),
+                        const SizedBox(width: 4),
+                        AppText.custom(
+                          text: 'Wins!'.toUpperCase(),
+                          textAlign: TextAlign.center,
+                          color: AppColors.white,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          fontStyle: FontStyle.normal,
+                        ),
+                      ],
+                    ),
+            ),
+          ],
+        ),
+        Positioned(bottom: 48, left: 32, child: _SmallBoardClip()),
+        Positioned(bottom: 48, right: 32, child: _SmallBoardClip()),
+      ],
     );
   }
+}
 
-  String _playerToSymbol(Player? player) {
-    switch (player) {
-      case Player.x:
-        return 'X';
-      case Player.o:
-        return 'O';
-      case null:
-        return '';
-    }
+class _SmallBoardClip extends StatelessWidget {
+  const _SmallBoardClip({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 36,
+      width: 16,
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.tertiary,
+            blurRadius: 0,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -78,7 +78,7 @@ class AppText extends StatelessWidget {
     TextAlign textAlign = TextAlign.center,
     Color color = AppColors.white,
     TextOverflow overflow = TextOverflow.ellipsis,
-    FontWeight fontWeight = FontWeight.w600,
+    FontWeight fontWeight = FontWeight.w800,
     double fontSize = 18,
     FontStyle fontStyle = FontStyle.normal,
   }) => AppText(

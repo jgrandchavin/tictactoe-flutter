@@ -1,25 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tictactoe_flutter/core/app_router.dart';
 import 'package:tictactoe_flutter/core/design/widgets/app_button.dart';
 import 'package:tictactoe_flutter/core/design/widgets/app_logo.dart';
 import 'package:tictactoe_flutter/core/design/widgets/app_scaffold.dart';
 import 'package:tictactoe_flutter/core/design/widgets/app_text.dart';
+import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
+import 'package:tictactoe_flutter/features/menu/presentation/controllers/menu_view_controller.dart';
 
-class MenuView extends StatelessWidget {
-  const MenuView({super.key});
+class MenuView extends ConsumerWidget {
+  const MenuView({super.key, this.savedGame});
+
+  final GameState? savedGame;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(menuViewControllerProvider(savedGame));
     return AppScaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Expanded(child: AppLogo()),
-          AppText.body(text: 'You have a game that is not finished'),
+          if (state.savedGame != null)
+            AppText.body(text: 'You have a game that is not finished'),
           const SizedBox(height: 4),
-          AppButton(text: 'Continue Game', onPressed: () {}),
+          if (state.savedGame != null)
+            AppButton(
+              text: 'Continue Game',
+              onPressed: () {
+                Navigator.of(context).pushReplacementNamed(
+                  AppRouter.gameRoute,
+                  arguments: state.savedGame,
+                );
+              },
+            ),
           const SizedBox(height: 16),
-          AppButton(text: 'Start New Game', onPressed: () {}),
+          AppButton(
+            text: 'Start New Game',
+            onPressed: () {
+              ref
+                  .read(menuViewControllerProvider(savedGame).notifier)
+                  .startNewGame();
+              Navigator.of(context).pushReplacementNamed(AppRouter.gameRoute);
+            },
+          ),
         ],
       ),
     );
