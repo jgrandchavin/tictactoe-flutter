@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tictactoe_flutter/core/app_router.dart';
 import 'package:tictactoe_flutter/core/providers/shared_preferences_provider.dart';
-import 'package:tictactoe_flutter/features/splash/presentation/views/splash_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +25,8 @@ class TicTacToeApp extends ConsumerWidget {
     return const MaterialApp(
       title: 'Tic Tac Toe',
       debugShowCheckedModeBanner: false,
-      home: SplashView(),
+      onGenerateRoute: AppRouter.onGenerateRoute,
+      initialRoute: AppRouter.splashRoute,
     );
   }
 }
