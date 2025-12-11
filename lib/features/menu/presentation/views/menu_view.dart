@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tictactoe_flutter/core/app_router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tictactoe_flutter/core/design/widgets/app_button.dart';
 import 'package:tictactoe_flutter/core/design/widgets/app_logo.dart';
 import 'package:tictactoe_flutter/core/design/widgets/app_scaffold.dart';
 import 'package:tictactoe_flutter/core/design/widgets/app_text.dart';
+import 'package:tictactoe_flutter/core/router/routes.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/menu/presentation/controllers/menu_view_controller.dart';
 
@@ -29,10 +30,9 @@ class MenuView extends ConsumerWidget {
             AppButton(
               text: 'Continue Game',
               onPressed: () {
-                Navigator.of(context).pushReplacementNamed(
-                  AppRouter.gameRoute,
-                  arguments: state.savedGame,
-                );
+                if (context.mounted) {
+                  context.pushReplacement(Routes.game, extra: state.savedGame);
+                }
               },
             ),
           const SizedBox(height: 16),
@@ -42,7 +42,10 @@ class MenuView extends ConsumerWidget {
               ref
                   .read(menuViewControllerProvider(savedGame).notifier)
                   .startNewGame();
-              Navigator.of(context).pushReplacementNamed(AppRouter.gameRoute);
+
+              if (context.mounted) {
+                context.pushReplacement(Routes.game);
+              }
             },
           ),
         ],

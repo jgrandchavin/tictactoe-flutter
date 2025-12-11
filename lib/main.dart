@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tictactoe_flutter/core/app_router.dart';
+import 'package:tictactoe_flutter/core/router/router.dart';
 
 import 'core/utils/logger.dart';
 
@@ -15,16 +15,15 @@ void main() async {
   runApp(ProviderScope(child: const TicTacToeApp()));
 }
 
-class TicTacToeApp extends StatelessWidget {
+class TicTacToeApp extends ConsumerWidget {
   const TicTacToeApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp.router(
       title: 'Tic Tac Toe',
       debugShowCheckedModeBanner: false,
-      onGenerateRoute: AppRouter.onGenerateRoute,
-      initialRoute: AppRouter.splashRoute,
+      routerConfig: ref.read(routerProvider),
     );
   }
 }
