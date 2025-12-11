@@ -1,16 +1,15 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/player.dart';
 
-class Board {
+part 'board.freezed.dart';
+
+@freezed
+abstract class Board with _$Board {
   static const int size = 3;
 
-  final List<List<Player?>> cells;
+  const factory Board({@Default([]) List<List<Player?>> cells}) = _Board;
 
-  const Board({required this.cells});
-
-  factory Board.empty() =>
-      Board(cells: List.generate(size, (_) => List.filled(size, null)));
-
-  Board copyWith({List<List<Player?>>? cells}) {
-    return Board(cells: cells ?? this.cells);
-  }
+  factory Board.empty() => Board(
+    cells: List.generate(size, (_) => List<Player?>.filled(size, null)),
+  );
 }

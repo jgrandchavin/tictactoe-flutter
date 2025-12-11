@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tictactoe_flutter/core/providers/shared_preferences_provider.dart';
+import 'package:tictactoe_flutter/core/providers/local_storage_service_provider.dart';
+import 'package:tictactoe_flutter/core/services/local_storage/local_storage_service.dart';
 import 'package:tictactoe_flutter/features/game/data/models/game_state_model.dart';
 
 part 'game_local_datasource.g.dart';
@@ -14,13 +14,13 @@ abstract class GameLocalDataSource {
 }
 
 class GameLocalDataSourceImpl implements GameLocalDataSource {
-  final SharedPreferences prefs;
+  final LocalStorageService localStorageService;
 
-  GameLocalDataSourceImpl({required this.prefs});
+  GameLocalDataSourceImpl({required this.localStorageService});
 
   @override
   Future<GameStateModel?> getSavedGame() async {
-    final gameState = prefs.getString('game_state');
+    final gameState = await localStorageService.get('game_state');
     return gameState != null
         ? GameStateModel.fromJson(json.decode(gameState))
         : null;
@@ -28,17 +28,20 @@ class GameLocalDataSourceImpl implements GameLocalDataSource {
 
   @override
   Future<void> saveGame({required GameStateModel gameState}) async {
-    await prefs.setString('game_state', json.encode(gameState.toJson()));
+    await localStorageService.set(
+      'game_state',
+      json.encode(gameState.toJson()),
+    );
   }
 
   @override
   Future<void> clearGame() async {
-    await prefs.remove('game_state');
+    await localStorageService.remove('game_state');
   }
 }
 
 @Riverpod(keepAlive: true)
 GameLocalDataSource gameLocalDataSource(Ref ref) {
-  final prefs = ref.watch(sharedPreferencesProvider);
-  return GameLocalDataSourceImpl(prefs: prefs);
+  final localStorageService = ref.watch(localStorageServiceProvider);
+  return GameLocalDataSourceImpl(localStorageService: localStorageService);
 }

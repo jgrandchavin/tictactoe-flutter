@@ -16,7 +16,9 @@ part 'game_view_controller.g.dart';
 class GameViewController extends _$GameViewController {
   @override
   GameViewState build(GameState? savedGame) {
-    return GameViewState(gameState: savedGame ?? GameState.empty());
+    return GameViewState(
+      gameState: savedGame ?? GameState(board: Board.empty()),
+    );
   }
 
   Future<void> makeMove({required Position position}) async {

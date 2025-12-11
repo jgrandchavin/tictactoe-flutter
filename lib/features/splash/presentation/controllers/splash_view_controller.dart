@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tictactoe_flutter/core/providers/local_storage_service_provider.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/domain/usecases/get_saved_game.dart';
 import 'package:tictactoe_flutter/features/splash/presentation/controllers/splash_view_state.dart';
@@ -29,7 +30,12 @@ class SplashViewController extends _$SplashViewController {
 
   Future<void> _startAsyncInit() async {
     try {
+      log.d('[SPLASH] Initializing local storage service');
+      await ref.read(localStorageServiceProvider).initialize();
+
+      log.d('[SPLASH] Checking saved game');
       final savedGame = await checkSavedGame();
+
       await _ensureMinDuration();
       state = state.copyWith(isLoading: false, savedGame: savedGame);
     } catch (e) {

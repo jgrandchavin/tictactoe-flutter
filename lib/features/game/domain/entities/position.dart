@@ -1,8 +1,8 @@
-class Position {
-  final int row;
-  final int column;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const Position({required this.row, required this.column});
+part 'position.freezed.dart';
 
-  factory Position.empty() => Position(row: 0, column: 0);
+@freezed
+abstract class Position with _$Position {
+  factory Position({@Default(0) int row, @Default(0) int column}) = _Position;
 }

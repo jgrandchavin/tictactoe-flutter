@@ -52,7 +52,7 @@ class MakeMove {
 
     final newGameState = gameState.copyWith(
       board: newBoard,
-      nextPlayer: nextPlayer,
+      currentPlayer: nextPlayer,
       status: newGameStatus,
       winner: winner,
     );

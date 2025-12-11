@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tictactoe_flutter/core/app_router.dart';
-import 'package:tictactoe_flutter/core/providers/shared_preferences_provider.dart';
 
 import 'core/utils/logger.dart';
 
@@ -10,16 +9,10 @@ void main() async {
   log.d('[MAIN] Starting app...');
   WidgetsFlutterBinding.ensureInitialized();
 
-  log.d('[MAIN] Initializing Shared Preferences');
-  final prefs = await SharedPreferences.getInstance();
-  log.d('[MAIN] Shared Preferences initialized');
+  log.d('[MAIN] Setting preferred orientations to portrait');
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  runApp(
-    ProviderScope(
-      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-      child: const TicTacToeApp(),
-    ),
-  );
+  runApp(ProviderScope(child: const TicTacToeApp()));
 }
 
 class TicTacToeApp extends StatelessWidget {
