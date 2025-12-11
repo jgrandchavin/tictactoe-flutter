@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tictactoe_flutter/core/services/local_storage/local_storage_service.dart';
+import 'package:tictactoe_flutter/core/providers/local_storage_service_provider.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/domain/usecases/get_saved_game.dart';
 import 'package:tictactoe_flutter/features/splash/presentation/controllers/splash_view_state.dart';
