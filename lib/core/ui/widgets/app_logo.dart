@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tictactoe_flutter/core/design/app_colors.dart';
-import 'package:tictactoe_flutter/core/design/widgets/app_text.dart';
+import 'package:tictactoe_flutter/core/ui/app_colors.dart';
+import 'package:tictactoe_flutter/core/ui/widgets/app_text.dart';
 
 class AppLogo extends StatelessWidget {
   const AppLogo({super.key});

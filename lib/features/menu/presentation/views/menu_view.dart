@@ -1,48 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tictactoe_flutter/core/design/widgets/app_button.dart';
-import 'package:tictactoe_flutter/core/design/widgets/app_logo.dart';
-import 'package:tictactoe_flutter/core/design/widgets/app_scaffold.dart';
-import 'package:tictactoe_flutter/core/design/widgets/app_text.dart';
 import 'package:tictactoe_flutter/core/router/routes.dart';
-import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
-import 'package:tictactoe_flutter/features/menu/presentation/controllers/menu_view_controller.dart';
+import 'package:tictactoe_flutter/core/ui/widgets/app_button.dart';
+import 'package:tictactoe_flutter/core/ui/widgets/app_logo.dart';
+import 'package:tictactoe_flutter/core/ui/widgets/app_scaffold.dart';
 
 class MenuView extends ConsumerWidget {
-  const MenuView({super.key, this.savedGame});
-
-  final GameState? savedGame;
+  const MenuView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(menuViewControllerProvider(savedGame));
     return AppScaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Expanded(child: AppLogo()),
-          if (state.savedGame != null)
-            AppText.body(text: 'You have a game that is not finished'),
-          const SizedBox(height: 4),
-          if (state.savedGame != null)
-            AppButton(
-              text: 'Continue Game',
-              onPressed: () {
-                if (context.mounted) {
-                  context.pushReplacement(Routes.game, extra: state.savedGame);
-                }
-              },
-            ),
-          const SizedBox(height: 16),
           AppButton(
-            text: 'Start New Game',
+            text: 'Start a 1V1 Game',
             onPressed: () {
-              ref
-                  .read(menuViewControllerProvider(savedGame).notifier)
-                  .startNewGame();
-
               if (context.mounted) {
                 context.pushReplacement(Routes.game);
               }

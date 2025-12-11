@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tictactoe_flutter/core/constants/storage_keys.dart';
 import 'package:tictactoe_flutter/core/providers/local_storage_service_provider.dart';
 import 'package:tictactoe_flutter/core/services/local_storage/local_storage_service.dart';
 import 'package:tictactoe_flutter/features/game/data/models/game_state_model.dart';
@@ -20,7 +21,7 @@ class GameLocalDataSourceImpl implements GameLocalDataSource {
 
   @override
   Future<GameStateModel?> getSavedGame() async {
-    final gameState = await localStorageService.get('game_state');
+    final gameState = await localStorageService.get(savedGameStorageKey);
     return gameState != null
         ? GameStateModel.fromJson(json.decode(gameState))
         : null;
@@ -29,14 +30,14 @@ class GameLocalDataSourceImpl implements GameLocalDataSource {
   @override
   Future<void> saveGame({required GameStateModel gameState}) async {
     await localStorageService.set(
-      'game_state',
+      savedGameStorageKey,
       json.encode(gameState.toJson()),
     );
   }
 
   @override
   Future<void> clearGame() async {
-    await localStorageService.remove('game_state');
+    await localStorageService.remove(savedGameStorageKey);
   }
 }
 

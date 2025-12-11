@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tictactoe_flutter/core/design/widgets/app_button.dart';
-import 'package:tictactoe_flutter/core/design/widgets/app_scaffold.dart';
+import 'package:tictactoe_flutter/core/ui/widgets/app_button.dart';
+import 'package:tictactoe_flutter/core/ui/widgets/app_scaffold.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/presentation/controllers/game_view_controller.dart';
 import 'package:tictactoe_flutter/features/game/presentation/widgets/board_widget.dart';

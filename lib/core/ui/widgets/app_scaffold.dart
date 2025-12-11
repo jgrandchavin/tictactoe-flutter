@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tictactoe_flutter/core/design/app_colors.dart';
+import 'package:tictactoe_flutter/core/ui/app_colors.dart';
 
 class AppScaffold extends StatelessWidget {
   final Widget body;

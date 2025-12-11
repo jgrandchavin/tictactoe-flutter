@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tictactoe_flutter/core/router/routes.dart';
-import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/presentation/views/game_view.dart';
 import 'package:tictactoe_flutter/features/menu/presentation/views/menu_view.dart';
 import 'package:tictactoe_flutter/features/splash/presentation/views/splash_view.dart';
@@ -23,10 +22,8 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: Routes.menu,
         name: Routes.menu,
-        pageBuilder: (context, state) => _buildFadeTransitionPage(
-          MenuView(savedGame: state.extra as GameState?),
-          state,
-        ),
+        pageBuilder: (context, state) =>
+            _buildFadeTransitionPage(const MenuView(), state),
       ),
       GoRoute(
         path: Routes.game,

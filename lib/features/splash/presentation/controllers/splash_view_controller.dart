@@ -1,7 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tictactoe_flutter/core/providers/local_storage_service_provider.dart';
-import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
-import 'package:tictactoe_flutter/features/game/domain/usecases/get_saved_game.dart';
+import 'package:tictactoe_flutter/core/usecases/check_save_game_exists.dart';
 import 'package:tictactoe_flutter/features/splash/presentation/controllers/splash_view_state.dart';
 
 import '../../../../core/utils/logger.dart';
@@ -33,24 +32,21 @@ class SplashViewController extends _$SplashViewController {
       log.d('[SPLASH] Initializing local storage service');
       await ref.read(localStorageServiceProvider).initialize();
 
-      log.d('[SPLASH] Checking saved game');
-      final savedGame = await checkSavedGame();
+      final savedGameExists = await ref
+          .read(checkSavedGameExistsUsecaseProvider)
+          .call();
+      log.d('[SPLASH] savedGameExists = $savedGameExists');
 
+      // NOTE: This is to ensure the splash screen is displayed for at least _minSplashDuration seconds.
       await _ensureMinDuration();
-      state = state.copyWith(isLoading: false, savedGame: savedGame);
+      state = state.copyWith(
+        isLoading: false,
+        savedGameExists: savedGameExists,
+      );
     } catch (e) {
       log.e('Error checking saved game', error: e);
       await _ensureMinDuration();
       state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<GameState?> checkSavedGame() async {
-    try {
-      return await ref.read(getSavedGameUsecaseProvider).call();
-    } catch (e) {
-      log.e('Error reading saved game', error: e);
-      return null;
     }
   }
 

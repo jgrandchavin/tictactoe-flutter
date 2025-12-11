@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tictactoe_flutter/core/design/app_colors.dart';
-import 'package:tictactoe_flutter/core/design/painters/cross_painter.dart';
-import 'package:tictactoe_flutter/core/design/painters/ring_painter.dart';
-import 'package:tictactoe_flutter/core/design/widgets/app_text.dart';
+import 'package:tictactoe_flutter/core/ui/app_colors.dart';
+import 'package:tictactoe_flutter/core/ui/painters/cross_painter.dart';
+import 'package:tictactoe_flutter/core/ui/painters/ring_painter.dart';
+import 'package:tictactoe_flutter/core/ui/widgets/app_text.dart';
 import 'package:tictactoe_flutter/core/utils/haptics_utils.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/player.dart';
 import 'package:tictactoe_flutter/features/game/presentation/animation/cell_anim_handle.dart';
