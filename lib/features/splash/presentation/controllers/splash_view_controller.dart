@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tictactoe_flutter/core/providers/local_storage_service_provider.dart';
-import 'package:tictactoe_flutter/core/usecases/check_save_game_exists.dart';
+import 'package:tictactoe_flutter/core/shared/usecases/check_save_game_exists.dart';
 import 'package:tictactoe_flutter/features/splash/presentation/controllers/splash_view_state.dart';
 
 import '../../../../core/utils/logger.dart';

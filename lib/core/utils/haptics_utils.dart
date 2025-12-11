@@ -17,6 +17,16 @@ class HapticsUtils {
     await HapticFeedback.lightImpact();
   }
 
+  static Future<void> medium() async {
+    if (!hapticFeedbackEnabled) return;
+    await HapticFeedback.mediumImpact();
+  }
+
+  static Future<void> selectionClick() async {
+    if (!hapticFeedbackEnabled) return;
+    await HapticFeedback.selectionClick();
+  }
+
   /// Gentle feedback for a valid, normal action (e.g., placing a move).
   static Future<void> move() async {
     if (!hapticFeedbackEnabled) return;

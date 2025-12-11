@@ -44,8 +44,8 @@ CustomTransitionPage<void> _buildFadeTransitionPage(
   return CustomTransitionPage<void>(
     key: state.pageKey,
     child: child,
-    transitionDuration: const Duration(milliseconds: 200),
-    reverseTransitionDuration: const Duration(milliseconds: 200),
+    transitionDuration: const Duration(milliseconds: 750),
+    reverseTransitionDuration: const Duration(milliseconds: 750),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(opacity: animation, child: child);
     },

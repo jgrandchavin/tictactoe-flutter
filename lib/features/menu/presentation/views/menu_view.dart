@@ -16,14 +16,21 @@ class MenuView extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Expanded(child: AppLogo()),
-          AppButton(
-            text: 'Start a 1V1 Game',
-            onPressed: () {
-              if (context.mounted) {
-                context.pushReplacement(Routes.game);
-              }
-            },
+          Expanded(
+            child: Align(alignment: Alignment.bottomCenter, child: AppLogo()),
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: AppButton(
+                text: 'Start a 1V1 Game',
+                onPressed: () {
+                  if (context.mounted) {
+                    context.pushReplacement(Routes.game);
+                  }
+                },
+              ),
+            ),
           ),
         ],
       ),

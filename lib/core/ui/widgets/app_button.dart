@@ -1,32 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:tictactoe_flutter/core/ui/app_colors.dart';
 import 'package:tictactoe_flutter/core/ui/widgets/app_text.dart';
+import 'package:tictactoe_flutter/core/utils/haptics_utils.dart';
 
-class AppButton extends StatelessWidget {
+class AppButton extends StatefulWidget {
   final String text;
-  final Function() onPressed;
+  final VoidCallback onPressed;
 
   const AppButton({super.key, required this.text, required this.onPressed});
 
   @override
+  State<AppButton> createState() => _AppButtonState();
+}
+
+class _AppButtonState extends State<AppButton> {
+  static const double _shadowOffsetY = 8.0;
+  static const Duration _animationDuration = Duration(milliseconds: 100);
+
+  bool _isPressed = false;
+
+  void _onTapDown() {
+    HapticsUtils.medium();
+    setState(() {
+      _isPressed = true;
+    });
+  }
+
+  void _onTapUp() {
+    HapticsUtils.selectionClick();
+    setState(() {
+      _isPressed = false;
+    });
+    widget.onPressed();
+  }
+
+  void _onTapCancel() {
+    HapticsUtils.medium();
+    setState(() {
+      _isPressed = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
-      child: Container(
+      behavior: HitTestBehavior.opaque,
+      onTapDown: (_) => _onTapDown(),
+      onTapUp: (_) => _onTapUp(),
+      onTapCancel: () => _onTapCancel(),
+      child: AnimatedContainer(
+        duration: _animationDuration,
+        curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         margin: const EdgeInsets.only(bottom: 8),
+        width: double.infinity,
+        transform: _isPressed
+            ? Matrix4.translationValues(0, _shadowOffsetY, 0)
+            : Matrix4.identity(),
         decoration: BoxDecoration(
           color: AppColors.primary,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.secondary,
-              blurRadius: 0,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          boxShadow: _isPressed
+              ? const []
+              : const [
+                  BoxShadow(
+                    color: AppColors.secondary,
+                    blurRadius: 0,
+                    offset: Offset(0, _shadowOffsetY),
+                  ),
+                ],
         ),
-        child: AppText.button(text: text.toUpperCase()),
+        child: AppText.button(text: widget.text.toUpperCase()),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tictactoe_flutter/core/router/routes.dart';
+import 'package:tictactoe_flutter/core/ui/animations/appear_animation.dart';
 import 'package:tictactoe_flutter/core/ui/app_colors.dart';
 import 'package:tictactoe_flutter/core/ui/widgets/app_loader.dart';
 import 'package:tictactoe_flutter/core/ui/widgets/app_logo.dart';
@@ -31,13 +32,29 @@ class SplashView extends ConsumerWidget {
 
     return AppScaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          AppLogo(),
-          const SizedBox(height: 32),
-          AppLoader(size: 40, strokeWidth: 4, color: AppColors.white),
-          const SizedBox(height: 16),
-          AppText.body(text: 'Loading...'.toUpperCase()),
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: AppearAnimation(child: AppLogo()),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: AppearAnimation(
+                delay: const Duration(milliseconds: 1000),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppLoader(size: 40, strokeWidth: 4, color: AppColors.white),
+                    const SizedBox(height: 16),
+                    AppText.body(text: 'Loading...'.toUpperCase()),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
