@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tictactoe_flutter/core/providers/local_storage_service_provider.dart';
 import 'package:tictactoe_flutter/core/services/local_storage/local_storage_service.dart';
 import 'package:tictactoe_flutter/features/game/data/models/game_state_model.dart';
 
