@@ -2,6 +2,12 @@
 
 A simple, polished Tic‑Tac‑Toe built with Flutter using a clean, feature‑first architecture. It supports 1v1 local multiplayer, smooth animations, haptics, and automatic game persistence.
 
+## Demo
+
+<video src="demo/demo.mov" controls autoplay loop muted playsinline width="360">
+  Your browser does not support the video tag. Watch the demo here: demo/demo.mov
+</video>
+
 ## Quick start
 
 ### 1) Install dependencies
