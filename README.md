@@ -4,9 +4,7 @@ A simple, polished Tic‑Tac‑Toe built with Flutter using a clean, feature‑f
 
 ## Demo
 
-<video src="demo/demo.mov" controls autoplay loop muted playsinline width="360">
-  Your browser does not support the video tag. Watch the demo here: demo/demo.mov
-</video>
+https://github.com/user-attachments/assets/dfd20997-95e8-40f8-a8f6-28aa0baa1316
 
 ## Quick start
 
