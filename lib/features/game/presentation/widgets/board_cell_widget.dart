@@ -161,17 +161,17 @@ class _BoardCellWidgetState extends ConsumerState<BoardCellWidget>
 
   @override
   Widget build(BuildContext context) {
-    final child = _cellContent(widget.player);
     return SlideTransition(
       position: _errorOffset,
       child: AnimatedBuilder(
+        child: _CellContent(cellIndex: widget.cellIndex, player: widget.player),
         animation: Listenable.merge([
           _appearCtrl,
           _tapCtrl,
           _nudgeCtrl,
           _winCtrl,
         ]),
-        builder: (context, _) {
+        builder: (context, child) {
           final scale = _appearScale.value * _tapScale.value * _winScale.value;
           return Transform.scale(
             scale: scale,
@@ -219,32 +219,41 @@ class _BoardCellWidgetState extends ConsumerState<BoardCellWidget>
       ),
     );
   }
+}
 
-  Widget _cellContent(Player? player) {
-    switch (player) {
-      case Player.x:
-        return SizedBox.expand(
-          child: CustomPaint(
-            painter: CrossPainter(color: AppColors.blue, strokeWidth: 12),
+class _CellContent extends StatelessWidget {
+  final int cellIndex;
+  final Player? player;
+
+  const _CellContent({required this.cellIndex, required this.player});
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        return switch (player) {
+          Player.x => SizedBox.expand(
+            child: CustomPaint(
+              painter: CrossPainter(color: AppColors.blue, strokeWidth: 12),
+            ),
           ),
-        );
-      case Player.o:
-        return SizedBox.expand(
-          child: CustomPaint(painter: RingPainter(color: AppColors.pink)),
-        );
-      case null:
-        return FittedBox(
-          fit: BoxFit.scaleDown,
-          child: AppText.custom(
-            text: '${widget.cellIndex + 1}',
-            textAlign: TextAlign.center,
-            color: AppColors.white.withValues(alpha: 0.05),
-            overflow: TextOverflow.ellipsis,
-            fontWeight: FontWeight.w900,
-            fontSize: 100,
-            fontStyle: FontStyle.normal,
+          Player.o => SizedBox.expand(
+            child: CustomPaint(painter: RingPainter(color: AppColors.pink)),
           ),
-        );
-    }
+          null => FittedBox(
+            fit: BoxFit.scaleDown,
+            child: AppText.custom(
+              text: '${cellIndex + 1}',
+              textAlign: TextAlign.center,
+              color: AppColors.white.withValues(alpha: 0.05),
+              overflow: TextOverflow.ellipsis,
+              fontWeight: FontWeight.w900,
+              fontSize: 100,
+              fontStyle: FontStyle.normal,
+            ),
+          ),
+        };
+      },
+    );
   }
 }
