@@ -37,6 +37,7 @@ class GameBottomButtons extends ConsumerWidget {
         SizedBox(height: 8),
         AppButton(
           onPressed: () {
+            controller.startNewGame();
             if (context.mounted) {
               context.pushReplacementNamed(Routes.menu);
             }

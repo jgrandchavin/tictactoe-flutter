@@ -25,9 +25,8 @@ class MenuView extends ConsumerWidget {
               child: AppButton(
                 text: 'Start a 1V1 Game',
                 onPressed: () {
-                  if (context.mounted) {
-                    context.pushReplacement(Routes.game);
-                  }
+                  if (!context.mounted) return;
+                  context.pushReplacementNamed(Routes.game);
                 },
               ),
             ),

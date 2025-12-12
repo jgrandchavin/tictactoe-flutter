@@ -22,12 +22,12 @@ class SplashView extends ConsumerWidget {
         if (context.mounted) {
           if (next.preloadedSavedGameInfo != null &&
               next.preloadedSavedGameInfo!.isInProgress) {
-            context.pushReplacement(
+            context.pushReplacementNamed(
               Routes.game,
               extra: next.preloadedSavedGameInfo!,
             );
           } else {
-            context.pushReplacement(Routes.menu);
+            context.pushReplacementNamed(Routes.menu);
           }
         }
       }
@@ -46,7 +46,7 @@ class SplashView extends ConsumerWidget {
           Expanded(
             child: Center(
               child: AppearAnimation(
-                delay: const Duration(milliseconds: 1000),
+                delay: const Duration(milliseconds: 750),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

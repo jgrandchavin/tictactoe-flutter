@@ -25,58 +25,63 @@ class _AppButtonState extends State<AppButton> {
 
   bool _isPressed = false;
 
-  void _onTapDown() {
+  void _press() {
+    if (!mounted) return;
+    setState(() => _isPressed = true);
     HapticsUtils.medium();
-    setState(() {
-      _isPressed = true;
-    });
   }
 
-  void _onTapUp() {
-    HapticsUtils.selectionClick();
-    setState(() {
-      _isPressed = false;
-    });
-    widget.onPressed();
-  }
-
-  void _onTapCancel() {
-    HapticsUtils.medium();
-    setState(() {
-      _isPressed = false;
-    });
+  void _release() {
+    if (!mounted) return;
+    setState(() => _isPressed = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTapDown: (_) => _onTapDown(),
-      onTapUp: (_) => _onTapUp(),
-      onTapCancel: () => _onTapCancel(),
-      child: AnimatedContainer(
-        duration: _animationDuration,
-        curve: Curves.easeOut,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        margin: const EdgeInsets.only(bottom: 8),
-        width: widget.allWidth ? double.infinity : null,
-        transform: _isPressed
-            ? Matrix4.translationValues(0, _shadowOffsetY, 0)
-            : Matrix4.identity(),
-        decoration: BoxDecoration(
-          color: AppColors.primary,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: _isPressed
-              ? const []
-              : const [
-                  BoxShadow(
-                    color: AppColors.secondary,
-                    blurRadius: 0,
-                    offset: Offset(0, _shadowOffsetY),
-                  ),
-                ],
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onHighlightChanged: (isDown) {
+          if (isDown) {
+            _press();
+          } else {
+            _release();
+          }
+        },
+        onTap: () {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) return;
+            widget.onPressed();
+            HapticsUtils.selectionClick();
+          });
+        },
+        child: AnimatedContainer(
+          duration: _animationDuration,
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          margin: const EdgeInsets.only(bottom: 8),
+          width: widget.allWidth ? double.infinity : null,
+          transform: _isPressed
+              ? Matrix4.translationValues(0, _shadowOffsetY, 0)
+              : Matrix4.identity(),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: _isPressed
+                ? const []
+                : const [
+                    BoxShadow(
+                      color: AppColors.secondary,
+                      blurRadius: 0,
+                      offset: Offset(0, _shadowOffsetY),
+                    ),
+                  ],
+          ),
+          child: AppText.button(text: widget.text.toUpperCase()),
         ),
-        child: AppText.button(text: widget.text.toUpperCase()),
       ),
     );
   }
