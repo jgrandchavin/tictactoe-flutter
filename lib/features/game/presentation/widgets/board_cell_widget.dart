@@ -94,13 +94,6 @@ class _BoardCellWidgetState extends ConsumerState<BoardCellWidget>
       end: 1.06,
     ).animate(CurvedAnimation(parent: _winCtrl, curve: Curves.easeInOut));
 
-    // Haptics synced to animation lifecycle
-    // _appearCtrl.addStatusListener((status) {
-    //   if (status == AnimationStatus.forward) {
-    //     // Use custom pattern to match appear timing when needed
-    //     HapticsUtils.cellAppear();
-    //   }
-    // });
     _tapCtrl.addStatusListener((status) {
       if (status == AnimationStatus.forward) {
         HapticsUtils.move();
@@ -118,7 +111,6 @@ class _BoardCellWidgetState extends ConsumerState<BoardCellWidget>
       }
     });
 
-    // Register handle for controller to command this cell
     _handleNotifier.value = CellAnimHandle(
       appear: () => _appearCtrl.forward(from: 0),
       tap: () => _tapCtrl.forward(from: 0),
@@ -145,15 +137,19 @@ class _BoardCellWidgetState extends ConsumerState<BoardCellWidget>
         setState(() {});
       },
     );
-    // Note: we'll unregister in dispose to avoid WidgetRef.onDispose (not available)
 
-    // Initial appear
-    _appearCtrl.forward();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future<void>.delayed(Duration(milliseconds: 250));
+
+      final int delayMs = 14 * (widget.cellIndex);
+      await Future<void>.delayed(Duration(milliseconds: delayMs));
+      if (!mounted) return;
+      _appearCtrl.forward(from: 0);
+    });
   }
 
   @override
   void dispose() {
-    // Unregister handle without using ref in dispose
     _handleNotifier.value = null;
     _appearCtrl.dispose();
     _tapCtrl.dispose();
@@ -181,37 +177,41 @@ class _BoardCellWidgetState extends ConsumerState<BoardCellWidget>
             scale: scale,
             child: Transform.translate(
               offset: _nudgeOffset?.value ?? Offset.zero,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.secondary,
-                          blurRadius: 0,
-                          offset: const Offset(0, 8),
+              child: RepaintBoundary(
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    RepaintBoundary(
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.secondary,
+                              blurRadius: 0,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    alignment: Alignment.center,
-                    child: child,
-                  ),
-                  // Win pulse overlay
-                  FadeTransition(
-                    opacity: _winOpacity,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(16),
+                        alignment: Alignment.center,
+                        child: RepaintBoundary(child: child),
                       ),
                     ),
-                  ),
-                ],
+                    // Win pulse overlay
+                    FadeTransition(
+                      opacity: _winOpacity,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

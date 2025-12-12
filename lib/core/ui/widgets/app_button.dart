@@ -6,8 +6,14 @@ import 'package:tictactoe_flutter/core/utils/haptics_utils.dart';
 class AppButton extends StatefulWidget {
   final String text;
   final VoidCallback onPressed;
+  final bool allWidth;
 
-  const AppButton({super.key, required this.text, required this.onPressed});
+  const AppButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.allWidth = true,
+  });
 
   @override
   State<AppButton> createState() => _AppButtonState();
@@ -53,7 +59,7 @@ class _AppButtonState extends State<AppButton> {
         curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         margin: const EdgeInsets.only(bottom: 8),
-        width: double.infinity,
+        width: widget.allWidth ? double.infinity : null,
         transform: _isPressed
             ? Matrix4.translationValues(0, _shadowOffsetY, 0)
             : Matrix4.identity(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tictactoe_flutter/core/ui/app_colors.dart';
 import 'package:tictactoe_flutter/core/ui/painters/cross_painter.dart';
 import 'package:tictactoe_flutter/core/ui/painters/ring_painter.dart';
@@ -7,25 +8,17 @@ import 'package:tictactoe_flutter/core/ui/widgets/custom_gesture_detector.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/board.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/position.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/player.dart';
+import 'package:tictactoe_flutter/features/game/presentation/controllers/game_view_controller.dart';
 import 'package:tictactoe_flutter/features/game/presentation/widgets/board_cell_widget.dart';
 
-class BoardWidget extends StatelessWidget {
-  final Board board;
-  final Player? winner;
-  final Player currentPlayer;
-  final Function(Position position) onCellTap;
-
-  const BoardWidget({
-    super.key,
-    required this.board,
-    required this.onCellTap,
-    required this.winner,
-    required this.currentPlayer,
-  });
+class BoardWidget extends ConsumerWidget {
+  const BoardWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final cells = board.cells;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(gameViewControllerProvider);
+    final controller = ref.read(gameViewControllerProvider.notifier);
+    final cells = state.gameState.board.cells;
 
     return Stack(
       children: [
@@ -37,29 +30,37 @@ class BoardWidget extends StatelessWidget {
                 color: AppColors.tertiary,
                 borderRadius: BorderRadius.circular(32),
               ),
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: Board.size,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                  ),
-                  itemCount: Board.size * Board.size,
-                  itemBuilder: (context, index) {
-                    final row = index ~/ Board.size;
-                    final col = index % Board.size;
-                    final player = cells[row][col];
+              child: RepaintBoundary(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: Board.size,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                        ),
+                    itemCount: Board.size * Board.size,
+                    itemBuilder: (context, index) {
+                      final row = index ~/ Board.size;
+                      final col = index % Board.size;
+                      final player = cells[row][col];
 
-                    return CustomGestureDetector(
-                      onTap: () {
-                        onCellTap(Position(row: row, column: col));
-                      },
-                      child: BoardCellWidget(cellIndex: index, player: player),
-                    );
-                  },
+                      return CustomGestureDetector(
+                        onTap: () {
+                          controller.makeMove(
+                            position: Position(row: row, column: col),
+                          );
+                        },
+                        child: BoardCellWidget(
+                          cellIndex: index,
+                          player: player,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -77,13 +78,13 @@ class BoardWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              child: winner == null
+              child: state.gameState.winner == null
                   ? Row(
-                      key: ValueKey<Player>(currentPlayer),
+                      key: ValueKey<Player>(state.gameState.currentPlayer),
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        if (currentPlayer == Player.x)
+                        if (state.gameState.currentPlayer == Player.x)
                           SizedBox(
                             width: 16,
                             height: 16,
@@ -94,7 +95,7 @@ class BoardWidget extends StatelessWidget {
                               ),
                             ),
                           )
-                        else if (currentPlayer == Player.o)
+                        else if (state.gameState.currentPlayer == Player.o)
                           SizedBox(
                             width: 16,
                             height: 16,
@@ -108,10 +109,10 @@ class BoardWidget extends StatelessWidget {
                         const SizedBox(width: 4),
                         AppText.custom(
                           text:
-                              '${currentPlayer == Player.x ? 'Cross' : 'Circle'}'
+                              '${state.gameState.currentPlayer == Player.x ? 'Cross' : 'Circle'}'
                                   .toUpperCase(),
                           textAlign: TextAlign.center,
-                          color: currentPlayer == Player.x
+                          color: state.gameState.currentPlayer == Player.x
                               ? AppColors.blue
                               : AppColors.pink,
                           overflow: TextOverflow.ellipsis,
@@ -135,7 +136,7 @@ class BoardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        if (winner == Player.x)
+                        if (state.gameState.winner == Player.x)
                           SizedBox(
                             width: 16,
                             height: 16,
@@ -146,7 +147,7 @@ class BoardWidget extends StatelessWidget {
                               ),
                             ),
                           )
-                        else if (winner == Player.o)
+                        else if (state.gameState.winner == Player.o)
                           SizedBox(
                             width: 16,
                             height: 16,
