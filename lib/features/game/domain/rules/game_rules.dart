@@ -116,4 +116,40 @@ class GameRules {
   ///
   /// Returns the new [Player] who has won, or `null` if there is no winner yet.
   static Player? getWinner({required Board board}) => isGameWon(board: board);
+
+  /// Returns the positions of the winning line for the given [board] and [winner].
+  ///
+  /// Returns `null` if there is no winning line.
+  static List<Position>? getWinningLinePositions({
+    required Board board,
+    required Player winner,
+  }) {
+    for (int r = 0; r < Board.size; r++) {
+      final row = board.cells[r];
+      if (row.every((cell) => cell == winner)) {
+        return List.generate(Board.size, (c) => Position(row: r, column: c));
+      }
+    }
+    for (int c = 0; c < Board.size; c++) {
+      final column = List.generate(Board.size, (r) => board.cells[r][c]);
+      if (column.every((cell) => cell == winner)) {
+        return List.generate(Board.size, (r) => Position(row: r, column: c));
+      }
+    }
+    final mainDiag = List.generate(Board.size, (i) => board.cells[i][i]);
+    if (mainDiag.every((cell) => cell == winner)) {
+      return List.generate(Board.size, (i) => Position(row: i, column: i));
+    }
+    final antiDiag = List.generate(
+      Board.size,
+      (i) => board.cells[i][Board.size - 1 - i],
+    );
+    if (antiDiag.every((cell) => cell == winner)) {
+      return List.generate(
+        Board.size,
+        (i) => Position(row: i, column: Board.size - 1 - i),
+      );
+    }
+    return null;
+  }
 }

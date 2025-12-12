@@ -8,6 +8,8 @@ import 'package:tictactoe_flutter/core/utils/haptics_utils.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/board.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/position.dart';
+import 'package:tictactoe_flutter/features/game/domain/enums/game_status.dart';
+import 'package:tictactoe_flutter/features/game/domain/rules/game_rules.dart';
 import 'package:tictactoe_flutter/features/game/domain/usecases/make_move.dart';
 import 'package:tictactoe_flutter/features/game/domain/usecases/start_new_game.dart';
 import 'package:tictactoe_flutter/features/game/presentation/animations/cell_anim_handle.dart';
@@ -23,8 +25,6 @@ class GameViewController extends _$GameViewController {
         .read(getPreloadedSavedGameProvider)
         .get();
 
-    // Do not mutate other providers while building.
-    // Clear the preloaded value right after build completes.
     if (preloadedSavedGameInfo != null) {
       Future.microtask(() => ref.read(clearPreloadedSavedGameProvider).clear());
     }
@@ -48,22 +48,20 @@ class GameViewController extends _$GameViewController {
 
       state = state.copyWith(gameState: newGameState);
 
-      // If there is a winner, animate the winning line cells.
+      // NOTE If there is a winner, animate the winning line cells.
       if (newGameState.winner != null) {
-        final line = _winningLinePositions(
-          newGameState.board,
-          newGameState.winner!,
+        final line = GameRules.getWinningLinePositions(
+          board: newGameState.board,
+          winner: newGameState.winner!,
         );
         if (line != null) {
           _animateWinCells(line);
-          // Slightly delayed pulse to align with the first win overlay peak.
           Future<void>.delayed(
             const Duration(milliseconds: 120),
             HapticsUtils.win,
           );
         }
-      } else if (newGameState.status.name == 'finished') {
-        // Draw (finished with no winner)
+      } else if (newGameState.status == GameStatus.finished) {
         HapticsUtils.draw();
       }
     } catch (e) {
@@ -77,11 +75,6 @@ class GameViewController extends _$GameViewController {
 
     state = state.copyWith(gameState: newGameState);
     _resetAllCellAnimations();
-    // Brief haptic to confirm reset, aligned with initial appear.
-    Future<void>.delayed(
-      const Duration(milliseconds: 50),
-      HapticsUtils.startNewGame,
-    );
   }
 
   void animateTapError(Position p) {
@@ -89,18 +82,12 @@ class GameViewController extends _$GameViewController {
   }
 
   void animateTap(Position p) {
-    // Self tap bounce
     ref.read(cellAnimHandleProvider(_indexOf(p))).value?.tap();
 
-    // Neighbor nudges
     const double d = 8.0;
-    // up
     _nudgeIfInBounds(row: p.row - 1, col: p.column, delta: const Offset(0, -d));
-    // down
     _nudgeIfInBounds(row: p.row + 1, col: p.column, delta: const Offset(0, d));
-    // left
     _nudgeIfInBounds(row: p.row, col: p.column - 1, delta: const Offset(-d, 0));
-    // right
     _nudgeIfInBounds(row: p.row, col: p.column + 1, delta: const Offset(d, 0));
   }
 
@@ -128,39 +115,5 @@ class GameViewController extends _$GameViewController {
       handle?.stopWin();
       handle?.appear();
     }
-  }
-
-  List<Position>? _winningLinePositions(Board board, dynamic winner) {
-    // Rows
-    for (int r = 0; r < Board.size; r++) {
-      final row = board.cells[r];
-      if (row.every((cell) => cell == winner)) {
-        return List.generate(Board.size, (c) => Position(row: r, column: c));
-      }
-    }
-    // Columns
-    for (int c = 0; c < Board.size; c++) {
-      final column = List.generate(Board.size, (r) => board.cells[r][c]);
-      if (column.every((cell) => cell == winner)) {
-        return List.generate(Board.size, (r) => Position(row: r, column: c));
-      }
-    }
-    // Main diagonal
-    final mainDiag = List.generate(Board.size, (i) => board.cells[i][i]);
-    if (mainDiag.every((cell) => cell == winner)) {
-      return List.generate(Board.size, (i) => Position(row: i, column: i));
-    }
-    // Anti-diagonal
-    final antiDiag = List.generate(
-      Board.size,
-      (i) => board.cells[i][Board.size - 1 - i],
-    );
-    if (antiDiag.every((cell) => cell == winner)) {
-      return List.generate(
-        Board.size,
-        (i) => Position(row: i, column: Board.size - 1 - i),
-      );
-    }
-    return null;
   }
 }

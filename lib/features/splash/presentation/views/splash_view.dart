@@ -18,7 +18,6 @@ class SplashView extends ConsumerWidget {
     ref.watch(splashViewControllerProvider);
 
     ref.listen(splashViewControllerProvider, (previous, next) {
-      // When loading completes, navigate to the menu.
       if (previous?.isLoading == true && next.isLoading == false) {
         if (context.mounted) {
           if (next.preloadedSavedGameInfo != null &&
