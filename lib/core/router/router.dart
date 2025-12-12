@@ -29,7 +29,7 @@ GoRouter router(Ref ref) {
         path: Routes.game,
         name: Routes.game,
         pageBuilder: (context, state) =>
-            _buildFadeTransitionPage(GameView(savedGame: null), state),
+            _buildFadeTransitionPage(const GameView(), state),
       ),
     ],
     errorBuilder: (context, state) =>

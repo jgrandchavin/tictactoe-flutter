@@ -13,4 +13,6 @@ abstract class GameState with _$GameState {
     @Default(Player.x) Player currentPlayer,
     @Default(null) Player? winner,
   }) = _GameState;
+
+  factory GameState.empty() => GameState(board: Board.empty());
 }

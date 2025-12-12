@@ -1,15 +1,18 @@
 class SplashViewState {
   final bool isLoading;
-  final bool savedGameExists;
-
+  final bool initializationSavedGameInfoExists;
   const SplashViewState({
     required this.isLoading,
-    this.savedGameExists = false,
+    required this.initializationSavedGameInfoExists,
   });
 
-  SplashViewState copyWith({bool? isLoading, bool? savedGameExists}) =>
-      SplashViewState(
-        isLoading: isLoading ?? this.isLoading,
-        savedGameExists: savedGameExists ?? this.savedGameExists,
-      );
+  SplashViewState copyWith({
+    bool? isLoading,
+    bool? initializationSavedGameInfoExists,
+  }) => SplashViewState(
+    isLoading: isLoading ?? this.isLoading,
+    initializationSavedGameInfoExists:
+        initializationSavedGameInfoExists ??
+        this.initializationSavedGameInfoExists,
+  );
 }

@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tictactoe_flutter/core/ui/widgets/app_button.dart';
 import 'package:tictactoe_flutter/core/ui/widgets/app_scaffold.dart';
-import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/presentation/controllers/game_view_controller.dart';
 import 'package:tictactoe_flutter/features/game/presentation/widgets/board_widget.dart';
 
 class GameView extends ConsumerWidget {
-  final GameState? savedGame;
-
-  const GameView({super.key, required this.savedGame});
+  const GameView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(gameViewControllerProvider(savedGame));
-    final controller = ref.read(gameViewControllerProvider(savedGame).notifier);
+    final state = ref.watch(gameViewControllerProvider);
+    final controller = ref.read(gameViewControllerProvider.notifier);
 
     return AppScaffold(
       body: Center(

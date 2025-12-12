@@ -6,7 +6,7 @@ import 'package:tictactoe_flutter/core/ui/painters/ring_painter.dart';
 import 'package:tictactoe_flutter/core/ui/widgets/app_text.dart';
 import 'package:tictactoe_flutter/core/utils/haptics_utils.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/player.dart';
-import 'package:tictactoe_flutter/features/game/presentation/animation/cell_anim_handle.dart';
+import 'package:tictactoe_flutter/features/game/presentation/animations/cell_anim_handle.dart';
 
 class BoardCellWidget extends ConsumerStatefulWidget {
   final int cellIndex;
@@ -206,7 +206,7 @@ class _BoardCellWidgetState extends ConsumerState<BoardCellWidget>
                     opacity: _winOpacity,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),

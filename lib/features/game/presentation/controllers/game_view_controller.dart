@@ -1,13 +1,15 @@
 import 'dart:ui' show Offset;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tictactoe_flutter/core/shared/initialization_saved_game/mappers/initialization_saved_game_info_mapper.dart';
+import 'package:tictactoe_flutter/core/shared/initialization_saved_game/usecases/get_initialization_saved_game_info.dart';
 import 'package:tictactoe_flutter/core/utils/haptics_utils.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/board.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/position.dart';
 import 'package:tictactoe_flutter/features/game/domain/usecases/make_move.dart';
 import 'package:tictactoe_flutter/features/game/domain/usecases/start_new_game.dart';
-import 'package:tictactoe_flutter/features/game/presentation/animation/cell_anim_handle.dart';
+import 'package:tictactoe_flutter/features/game/presentation/animations/cell_anim_handle.dart';
 import 'package:tictactoe_flutter/features/game/presentation/controllers/game_view_state.dart';
 
 part 'game_view_controller.g.dart';
@@ -15,10 +17,20 @@ part 'game_view_controller.g.dart';
 @riverpod
 class GameViewController extends _$GameViewController {
   @override
-  GameViewState build(GameState? savedGame) {
-    return GameViewState(
-      gameState: savedGame ?? GameState(board: Board.empty()),
+  GameViewState build() {
+    final getInitializationSavedGameInfoState = ref.watch(
+      getInitializationSavedGameInfoProvider,
     );
+
+    final initializationSavedGameInfo = getInitializationSavedGameInfoState
+        .call();
+
+    final initialGameState = initializationSavedGameInfo != null
+        ? InitializationSavedGameInfoMapper.toDomain(
+            initializationSavedGameInfo,
+          )
+        : null;
+    return GameViewState(gameState: initialGameState ?? GameState.empty());
   }
 
   Future<void> makeMove({required Position position}) async {
