@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tictactoe_flutter/core/router/routes.dart';
+import 'package:tictactoe_flutter/core/shared/initialization_saved_game/entities/initialization_saved_game_info.dart';
+import 'package:tictactoe_flutter/core/shared/initialization_saved_game/mappers/initialization_saved_game_info_mapper.dart';
 import 'package:tictactoe_flutter/features/game/presentation/views/game_view.dart';
 import 'package:tictactoe_flutter/features/menu/presentation/views/menu_view.dart';
 import 'package:tictactoe_flutter/features/splash/presentation/views/splash_view.dart';
@@ -28,8 +30,21 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: Routes.game,
         name: Routes.game,
-        pageBuilder: (context, state) =>
-            _buildFadeTransitionPage(const GameView(), state),
+        pageBuilder: (context, state) {
+          if (state.extra is InitializationSavedGameInfo) {
+            final initialGameState = InitializationSavedGameInfoMapper.toDomain(
+              state.extra as InitializationSavedGameInfo,
+            );
+            return _buildFadeTransitionPage(
+              GameView(initialGameState: initialGameState),
+              state,
+            );
+          }
+          return _buildFadeTransitionPage(
+            const GameView(initialGameState: null),
+            state,
+          );
+        },
       ),
     ],
     errorBuilder: (context, state) =>

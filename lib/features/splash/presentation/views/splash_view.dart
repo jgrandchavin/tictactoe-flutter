@@ -21,8 +21,12 @@ class SplashView extends ConsumerWidget {
       // When loading completes, navigate to the menu.
       if (previous?.isLoading == true && next.isLoading == false) {
         if (context.mounted) {
-          if (next.initializationSavedGameInfoExists) {
-            context.pushReplacement(Routes.game);
+          if (next.initializationSavedGameInfo != null &&
+              next.initializationSavedGameInfo!.isInProgress) {
+            context.pushReplacement(
+              Routes.game,
+              extra: next.initializationSavedGameInfo!,
+            );
           } else {
             context.pushReplacement(Routes.menu);
           }

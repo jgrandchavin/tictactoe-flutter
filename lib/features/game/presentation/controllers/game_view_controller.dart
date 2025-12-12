@@ -1,8 +1,6 @@
 import 'dart:ui' show Offset;
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tictactoe_flutter/core/shared/initialization_saved_game/mappers/initialization_saved_game_info_mapper.dart';
-import 'package:tictactoe_flutter/core/shared/initialization_saved_game/usecases/get_initialization_saved_game_info.dart';
 import 'package:tictactoe_flutter/core/utils/haptics_utils.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/board.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
@@ -17,19 +15,7 @@ part 'game_view_controller.g.dart';
 @riverpod
 class GameViewController extends _$GameViewController {
   @override
-  GameViewState build() {
-    final getInitializationSavedGameInfoState = ref.watch(
-      getInitializationSavedGameInfoProvider,
-    );
-
-    final initializationSavedGameInfo = getInitializationSavedGameInfoState
-        .call();
-
-    final initialGameState = initializationSavedGameInfo != null
-        ? InitializationSavedGameInfoMapper.toDomain(
-            initializationSavedGameInfo,
-          )
-        : null;
+  GameViewState build({GameState? initialGameState}) {
     return GameViewState(gameState: initialGameState ?? GameState.empty());
   }
 
