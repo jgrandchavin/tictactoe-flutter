@@ -23,6 +23,9 @@ class MakeMove {
     required Position position,
   }) async {
     final isMoveInBounds = GameRules.isMoveInBounds(position: position);
+    if (!isMoveInBounds) {
+      throw GameError.invalidMove();
+    }
 
     final isCellEmpty = GameRules.isCellEmpty(
       board: gameState.board,
@@ -31,7 +34,7 @@ class MakeMove {
 
     final isGameFinished = GameRules.isGameFinished(board: gameState.board);
 
-    if (!isMoveInBounds || !isCellEmpty || isGameFinished) {
+    if (!isCellEmpty || isGameFinished) {
       throw GameError.invalidMove();
     }
 
