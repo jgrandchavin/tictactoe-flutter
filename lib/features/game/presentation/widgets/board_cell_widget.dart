@@ -106,7 +106,6 @@ class _BoardCellWidgetState extends ConsumerState<BoardCellWidget>
     });
     _nudgeCtrl.addStatusListener((status) {
       if (status == AnimationStatus.forward) {
-        // Subtle nudge for neighbors
         HapticsUtils.move();
       }
     });
@@ -200,7 +199,6 @@ class _BoardCellWidgetState extends ConsumerState<BoardCellWidget>
                         child: RepaintBoundary(child: child),
                       ),
                     ),
-                    // Win pulse overlay
                     FadeTransition(
                       opacity: _winOpacity,
                       child: DecoratedBox(

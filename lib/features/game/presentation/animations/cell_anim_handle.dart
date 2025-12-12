@@ -3,7 +3,6 @@ import 'dart:ui' show Offset;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Imperative animation API a cell registers so controllers can trigger it.
 class CellAnimHandle {
   final VoidCallback appear;
   final VoidCallback tap;
@@ -22,8 +21,6 @@ class CellAnimHandle {
   });
 }
 
-/// Registry keyed by cellIndex using a ValueNotifier for mutability without
-/// extra dependencies.
 final cellAnimHandleProvider =
     Provider.family<ValueNotifier<CellAnimHandle?>, int>((ref, cellIndex) {
       final notifier = ValueNotifier<CellAnimHandle?>(null);

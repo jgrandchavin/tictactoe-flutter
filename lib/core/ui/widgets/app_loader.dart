@@ -3,9 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
 
-/// A simple rotating arc loader animated with `simple_animations`.
-///
-/// Customize [size], [strokeWidth], [color], and optional [backgroundColor].
 class AppLoader extends StatelessWidget {
   final double size;
   final double strokeWidth;
