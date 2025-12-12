@@ -1,10 +1,10 @@
-class InitializationSavedGameInfo {
+class PreloadedSavedGameInfo {
   final List<List<int>> board;
   final String status;
   final int currentPlayer;
   final int? winner;
 
-  const InitializationSavedGameInfo({
+  const PreloadedSavedGameInfo({
     required this.board,
     required this.status,
     required this.currentPlayer,

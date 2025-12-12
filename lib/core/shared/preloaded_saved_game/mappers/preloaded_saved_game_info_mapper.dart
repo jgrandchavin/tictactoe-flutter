@@ -1,12 +1,12 @@
-import 'package:tictactoe_flutter/core/shared/initialization_saved_game/entities/initialization_saved_game_info.dart';
+import 'package:tictactoe_flutter/core/shared/preloaded_saved_game/entities/preloaded_saved_game_info.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/board.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/game_status.dart';
 import 'package:tictactoe_flutter/features/game/domain/enums/player.dart';
 
-class InitializationSavedGameInfoMapper {
-  static InitializationSavedGameInfo fromDomain(GameState domain) {
-    return InitializationSavedGameInfo(
+class PreloadedSavedGameInfoMapper {
+  static PreloadedSavedGameInfo fromDomain(GameState domain) {
+    return PreloadedSavedGameInfo(
       board: domain.board.cells
           .map(
             (row) => row
@@ -33,7 +33,7 @@ class InitializationSavedGameInfoMapper {
     }
   }
 
-  static GameState toDomain(InitializationSavedGameInfo info) {
+  static GameState toDomain(PreloadedSavedGameInfo info) {
     final cells = info.board
         .map(
           (row) => row

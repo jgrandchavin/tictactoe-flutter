@@ -1,6 +1,9 @@
-import 'dart:ui' show Offset;
+import 'dart:ui';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tictactoe_flutter/core/shared/preloaded_saved_game/mappers/preloaded_saved_game_info_mapper.dart';
+import 'package:tictactoe_flutter/core/shared/preloaded_saved_game/usecases/clear_preloaded_saved_game.dart';
+import 'package:tictactoe_flutter/core/shared/preloaded_saved_game/usecases/get_preloaded_saved_game.dart';
 import 'package:tictactoe_flutter/core/utils/haptics_utils.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/board.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
@@ -15,8 +18,23 @@ part 'game_view_controller.g.dart';
 @riverpod
 class GameViewController extends _$GameViewController {
   @override
-  GameViewState build({GameState? initialGameState}) {
-    return GameViewState(gameState: initialGameState ?? GameState.empty());
+  GameViewState build() {
+    final preloadedSavedGameInfo = ref
+        .read(getPreloadedSavedGameProvider)
+        .get();
+
+    // Do not mutate other providers while building.
+    // Clear the preloaded value right after build completes.
+    if (preloadedSavedGameInfo != null) {
+      Future.microtask(() => ref.read(clearPreloadedSavedGameProvider).clear());
+    }
+
+    final initGameState =
+        preloadedSavedGameInfo != null && preloadedSavedGameInfo.isInProgress
+        ? PreloadedSavedGameInfoMapper.toDomain(preloadedSavedGameInfo)
+        : GameState.empty();
+
+    return GameViewState(gameState: initGameState);
   }
 
   Future<void> makeMove({required Position position}) async {

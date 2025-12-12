@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tictactoe_flutter/core/errors/game_error.dart';
+import 'package:tictactoe_flutter/core/utils/logger.dart';
 import 'package:tictactoe_flutter/features/game/data/repositories/game_repository_impl.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/game_state.dart';
 import 'package:tictactoe_flutter/features/game/domain/entities/position.dart';
@@ -58,6 +59,8 @@ class MakeMove {
     );
 
     unawaited(gameRepository.saveGame(gameState: newGameState));
+
+    log.d('[MAKE_MOVE] Position: $position');
 
     return newGameState;
   }

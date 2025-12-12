@@ -1,20 +1,20 @@
-import 'package:tictactoe_flutter/core/shared/initialization_saved_game/entities/initialization_saved_game_info.dart';
+import 'package:tictactoe_flutter/core/shared/preloaded_saved_game/entities/preloaded_saved_game_info.dart';
 
 class SplashViewState {
   final bool isLoading;
-  final InitializationSavedGameInfo? initializationSavedGameInfo;
+  final PreloadedSavedGameInfo? preloadedSavedGameInfo;
 
   const SplashViewState({
     required this.isLoading,
-    required this.initializationSavedGameInfo,
+    required this.preloadedSavedGameInfo,
   });
 
   SplashViewState copyWith({
     bool? isLoading,
-    InitializationSavedGameInfo? initializationSavedGameInfo,
+    PreloadedSavedGameInfo? preloadedSavedGameInfo,
   }) => SplashViewState(
     isLoading: isLoading ?? this.isLoading,
-    initializationSavedGameInfo:
-        initializationSavedGameInfo ?? this.initializationSavedGameInfo,
+    preloadedSavedGameInfo:
+        preloadedSavedGameInfo ?? this.preloadedSavedGameInfo,
   );
 }
