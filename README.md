@@ -1,16 +1,81 @@
-# tictactoe_flutter
+## Tic-Tac-Toe (Flutter)
 
-A new Flutter project.
+A simple, polished Tic‑Tac‑Toe built with Flutter using a clean, feature‑first architecture. It supports 1v1 local multiplayer, smooth animations, haptics, and automatic game persistence.
 
-## Getting Started
+## Quick start
 
-This project is a starting point for a Flutter application.
+### 1) Install dependencies
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 2) Generate code (Freezed, JSON serialization, Riverpod)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+### 3) Run the application
+
+```bash
+flutter run
+```
+
+## Architecture
+
+- **Style**: Clean Architecture, **feature‑first** organization
+- **Layers per feature**: presentation ⟶ domain ⟶ data
+- **Shared**: reusable UI, services, router, storage, utils
+
+```
+lib/
+  core/
+    router/           // go_router setup
+    services/
+      local_storage/  // SharedPreferences-backed storage service
+    utils/            // haptics, logger, etc.
+  features/
+    game/             // game feature (data/domain/presentation)
+    menu/             // menu feature
+    splash/           // splash feature
+```
+
+## State management
+
+- **Riverpod** (with code generation via `riverpod_generator` and `riverpod_annotation`)
+
+## Routing
+
+- **go_router** with fade page transitions and named routes
+
+## Serialization
+
+- **Freezed** for immutable models + unions
+- **json_serializable** for JSON (de)serialization
+- Codegen command:
+
+```bash
+fvm dart run build_runner build --delete-conflicting-outputs
+```
+
+## Haptics
+
+- **Gaimon** provides richer haptic patterns (e.g., win pattern), with platform fallbacks via `HapticFeedback`
+- Toggle and helpers centralized in `core/utils/haptics_utils.dart`
+
+## Persistence
+
+- Ongoing match is saved locally using **SharedPreferences** (see `core/services/local_storage`)
+- Game in progress is restored on app reopen
+
+## Features
+
+- 1v1 local multiplayer
+- Smooth board animations
+- In‑progress game is cached and automatically resumed
+
+## Notes / Future work
+
+- VS Bot (AI) mode
+- Online multiplayer mode
