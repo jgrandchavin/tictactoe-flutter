@@ -73,6 +73,10 @@ dart run build_runner build --delete-conflicting-outputs
 - Ongoing match is saved locally using **SharedPreferences** (see `core/services/local_storage`)
 - Game in progress is restored on app reopen
 
+## Compatibility
+
+- Tested only on iOS, specifically on an iPhone 13 Pro Max.
+
 ## Features
 
 - 1v1 local multiplayer
